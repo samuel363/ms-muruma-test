@@ -8,8 +8,8 @@ import java.util.UUID;
 @Value
 @Builder
 public class Phone {
-    private UUID id;
-    private Integer number;
-    private String cityCode;
-    private String countryCode;
+    UUID id;
+    Integer number;
+    String cityCode;
+    String countryCode;
 }

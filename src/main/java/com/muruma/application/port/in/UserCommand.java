@@ -7,7 +7,8 @@ import java.util.UUID;
 public interface UserCommand {
     User createUser(User user);
 
-    User updateUser(UUID id, User domain);
+
+    User updateUser(UUID id, User domain, String token);
 
     User validateUser(User user);
 

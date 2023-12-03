@@ -3,6 +3,8 @@ package com.muruma.config.handler;
 import com.muruma.adapter.jpa.exception.UserNotFoundException;
 import com.muruma.config.ErrorCode;
 import com.muruma.config.exception.GenericException;
+import io.jsonwebtoken.ClaimJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -43,6 +45,18 @@ public class ErrorHandler {
         if (e.getClass() == UserNotFoundException.class) status = HttpStatus.NOT_FOUND;
         log.error(status.getReasonPhrase(), e);
         return buildError(status, e.getMessage(), e);
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> handle(SignatureException e) {
+        log.error(HttpStatus.BAD_REQUEST.getReasonPhrase(), e);
+        return buildError(HttpStatus.BAD_REQUEST, ErrorCode.UNAUTHORIZED_USER.getReason(), null);
+    }
+
+    @ExceptionHandler(ClaimJwtException.class)
+    public ResponseEntity<ErrorResponse> handle(ClaimJwtException e) {
+        log.error(HttpStatus.BAD_REQUEST.getReasonPhrase(), e);
+        return buildError(HttpStatus.BAD_REQUEST, ErrorCode.UNAUTHORIZED_USER.getReason(), null);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

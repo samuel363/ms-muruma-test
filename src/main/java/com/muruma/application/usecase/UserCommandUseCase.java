@@ -37,11 +37,12 @@ public class UserCommandUseCase implements UserCommand {
         user = user.withPassword(
                 encryptionService.aesEncrypt(user.getPassword())
         );
-
         user = userJPARepository.createUser(user);
-        String token = generateToken(user);
-
-        return user.withToken(token);
+        user = userJPARepository.updateUserToken(
+                user,
+                generateToken(user)
+        );
+        return user;
     }
 
     @Override
@@ -49,20 +50,24 @@ public class UserCommandUseCase implements UserCommand {
         user = user.withPassword(
                 encryptionService.aesEncrypt(user.getPassword())
         );
-
         if (!userJPARepository.validateUser(user))
             throw new UserLoginException(ErrorCode.INVALID_CREDENTIALS);
 
         user = userJPARepository.updateLoginUser(user);
-        String token = generateToken(user);
+        user = userJPARepository.updateUserToken(
+                user,
+                generateToken(user)
+        );
 
         return User.builder()
-                .token(token)
+                .token(user.getToken())
                 .build();
     }
 
     @Override
-    public User updateUser(UUID id, User user) {
+    public User updateUser(UUID id, User user, String token) {
+        if (!validateToken(token.replace("Bearer ", ""), id.toString()))
+            throw new UserLoginException(ErrorCode.UNAUTHORIZED_USER);
         if (!Objects.isNull(user.getPassword())) {
             user = user.withPassword(
                     encryptionService.aesEncrypt(user.getPassword())
@@ -90,12 +95,12 @@ public class UserCommandUseCase implements UserCommand {
         claims.put("modified", user.getModified().toString());
         claims.put("last_login", user.getLastLogin().toString());
         claims.put("isactive", user.getIsActive().toString());
-        return tokenGeneratorService.generateToken(claims, user.getEmail());
+        return tokenGeneratorService.generateToken(claims, user.getId().toString());
     }
 
-    private Boolean validateToken(String token, User user) {
-        final String username = tokenGeneratorService.getSubjectFromToken(token);
-        return (username.equals(user.getEmail()) && !tokenGeneratorService.isTokenExpired(token));
+    private Boolean validateToken(String token, String id) {
+        final String subject = tokenGeneratorService.getSubjectFromToken(token);
+        return (subject.equals(id) && !tokenGeneratorService.isTokenExpired(token));
     }
 
 }

@@ -31,6 +31,10 @@ Para mas detalle consultar la
 ## Recursos:
 
 ### SQL:
+para arrancar posicionarse en la carpeta docker y ejecutar el siguiente comando:
+```shell
+docker-compose up -d
+```
 
 <details><summary>init.sql [POSTGRES]</summary>
 
@@ -45,6 +49,7 @@ CREATE TABLE IF NOT EXISTS "user"(
     created timestamp not null DEFAULT now(),
     modified timestamp not null DEFAULT now(),
     last_login timestamp not null DEFAULT now(),
+    token text,
     is_active boolean not null
 );
 

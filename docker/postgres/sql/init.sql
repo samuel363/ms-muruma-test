@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS "user"
     last_login timestamp not null DEFAULT now
 (
 ),
+    token text,
     is_active boolean not null
     );
 

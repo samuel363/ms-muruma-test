@@ -72,6 +72,17 @@ public class UserAdapter implements UserJPARepository {
     }
 
     @Override
+    public User updateUserToken(User user, String token) {
+        Optional<UserEntity> optional = userRepository.findById(user.getId());
+        if (optional.isEmpty())
+            throw new UserNotFoundException(ErrorCode.CLIENT_NOT_FOUND);
+        UserEntity result = optional.get();
+        result.setToken(token);
+        result = userRepository.save(result);
+        return result.toDomain();
+    }
+
+    @Override
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }

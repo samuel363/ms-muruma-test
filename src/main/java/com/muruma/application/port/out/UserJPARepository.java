@@ -16,4 +16,6 @@ public interface UserJPARepository {
     boolean validateUser(User user);
 
     User updateLoginUser(User user);
+
+    User updateUserToken(User user, String s);
 }

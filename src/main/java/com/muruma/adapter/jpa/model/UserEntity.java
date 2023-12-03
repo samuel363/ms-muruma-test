@@ -35,6 +35,7 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<PhoneEntity> phones;
+    private String token;
 
     public UserEntity() {
     }
@@ -71,6 +72,7 @@ public class UserEntity {
                 .created(created)
                 .modified(modified)
                 .lastLogin(lastLogin)
+                .token(token)
                 .build();
     }
 }

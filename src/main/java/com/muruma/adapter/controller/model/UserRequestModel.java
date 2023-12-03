@@ -12,6 +12,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
@@ -43,13 +44,16 @@ public class UserRequestModel {
     }
 
     public User toDomain() {
-        List<Phone> phones = this.phones.stream().map(phoneModel ->
-                Phone.builder()
-                        .number(phoneModel.getNumber())
-                        .cityCode(phoneModel.getCityCode())
-                        .countryCode(phoneModel.getCountryCode())
-                        .build()
-        ).collect(Collectors.toList());
+        List<Phone> phones = null;
+        if (!Objects.isNull(this.phones)) {
+            phones = this.phones.stream().map(phoneModel ->
+                    Phone.builder()
+                            .number(phoneModel.getNumber())
+                            .cityCode(phoneModel.getCityCode())
+                            .countryCode(phoneModel.getCountryCode())
+                            .build()
+            ).collect(Collectors.toList());
+        }
 
         return User.builder()
                 .name(this.name)

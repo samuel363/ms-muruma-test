@@ -93,15 +93,4 @@ public class TokenGeneratorService {
                 .compact();
     }
 
-/*    void getClaims(){
-        JwtClaims jwtClaims = new JwtClaims();
-        NumericDate time = NumericDate.now();
-        time.addSeconds(this.encryptProperty.getJwtTimeout());
-        jwtClaims.setExpirationTime(time);
-        jwtClaims.setGeneratedJwtId();
-        jwtClaims.setIssuedAtToNow();
-        jwtClaims.setIssuer("DATO");
-        jwtClaims.setNotBeforeMinutesInThePast(0.5f);
-    }*/
-
 }
