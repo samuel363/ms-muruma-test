@@ -4,7 +4,37 @@
 
 API RESTful de creación de usuarios con autenticacion JWT.
 
-### repositorio:
+### Requerimientos:
+<details><summary>gradle</summary>
+
+```
+// SPING
+org.spring-boot-starter-web
+org.spring-boot-starter-validation
+org.spring-boot-starter-data-jpa
+
+io.springfox:springfox-boot-starter:3.0.0
+io.springfox:springfox-swagger2:3.0.0
+io.springfox:springfox-swagger-ui:3.0.0
+javax.validation:validation-api:2.0.1.Final
+
+// Logstash
+net.logstash.logback:logstash-logback-encoder:6.3
+
+// JWT
+io.jsonwebtoken:jjwt-api:0.12.3
+io.jsonwebtoken:jjwt-impl:0.12.3
+io.jsonwebtoken:jjwt-jackson:0.12.3
+
+//TEST
+spring-boot-starter-test
+org.springframework.boot:spring-boot-starter-test
+com.tngtech.archunit:archunit-junit5:1.1.0
+com.tngtech.archunit:archunit:1.0.0
+```
+</details>
+
+### Repositorio:
 
 [GITHUB: ms-muruma-test](https://github.com/samuel363/ms-muruma-test)
 

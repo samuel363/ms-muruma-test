@@ -1,7 +1,9 @@
 package com.muruma.adapter.controller;
 
+import com.muruma.adapter.controller.model.UpdateUserRequestModel;
 import com.muruma.application.port.in.UserCommand;
 import com.muruma.application.port.in.UserQuery;
+import com.muruma.faker.UpdateUserRequestModelMock;
 import com.muruma.faker.UserLoginRequestModelMock;
 import com.muruma.faker.UserMock;
 import com.muruma.faker.UserRequestModelMock;
@@ -61,14 +63,14 @@ class UserControllerAdapterTest {
     @DisplayName("When user is update success")
     void updateUserSuccessInternal() throws Exception {
         var id = UUID.randomUUID();
-        var user = UserRequestModelMock.getUserRest().toDomain().withPhones(null);
+        var user = UpdateUserRequestModelMock.getUserRest().toDomain().withPhones(null);
         when(userCommand.updateUser(id, user, "token")).thenReturn(UserMock.build(id));
 
         restRequest.perform(
                         MockMvcRequestBuilders.put(String.format(USER_URL, id))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(UtilsByTest.JsonToString(UserRequestModelMock.getUserRest()))
+                                .content(UtilsByTest.JsonToString(UpdateUserRequestModelMock.getUserRest()))
                                 .header("Authorization","token")
                 )
                 .andDo(print())

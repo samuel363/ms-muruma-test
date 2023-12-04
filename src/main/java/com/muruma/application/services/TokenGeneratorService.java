@@ -19,36 +19,9 @@ import java.util.function.Function;
 public class TokenGeneratorService {
     private final EncryptProperty encryptProperty;
 
-    //private final JwtClaims jwtClaims;
     public TokenGeneratorService(EncryptProperty encryptProperty) {
         this.encryptProperty = encryptProperty;
     }
-
-/*
-    public String generateToken(){
-        //-------------
-        String jwt = Jwts.builder()
-                        .header()
-                            .keyId("muruma-test")
-                        .and()
-                        .content("Prueba")
-                        .subject("Bob")
-                        .signWith(getKey())
-*/
-/*
-                        .expiration(expiration)
-                        .notBefore(notBefore)
-                        .issuedAt(new Date()) // for example, now
-*//*
-
-                        .compact();
-        //------------------
-        JwtBuilder jwtBuilder = Jwts.builder();
-        //------------------
-        String token="";
-        return token;
-    }
-*/
 
     private static final long JWT_TOKEN_VALIDITY = 60 * 60 * 1000;
 

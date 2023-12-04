@@ -41,7 +41,6 @@ public class Encryption256GCMService {
         this.encryptProperty = encryptProperty;
     }
 
-
     public String aesEncrypt(String data) {
         log.debug(MSG_BEGIN_ENCRYPT, data);
         try {
