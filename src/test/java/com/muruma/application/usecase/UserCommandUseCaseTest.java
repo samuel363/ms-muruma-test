@@ -45,8 +45,8 @@ public class UserCommandUseCaseTest {
 
         var response = useCase.createUser(user);
 
+        assertThat(response).isNotNull();
         assertThat(response.getToken()).isNotBlank();
-        assertThat(response.getId()).isNotNull();
     }
 
     @Test

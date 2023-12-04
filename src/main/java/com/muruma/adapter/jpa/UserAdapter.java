@@ -65,7 +65,10 @@ public class UserAdapter implements UserJPARepository {
 
     @Override
     public User updateLoginUser(User user) {
-        UserEntity result = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
+        Optional<UserEntity> optional = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
+        if (optional.isEmpty())
+            throw new UserNotFoundException(ErrorCode.CLIENT_NOT_FOUND);
+        UserEntity result = optional.get();
         result.setLastLogin(LocalDateTime.now());
         result = userRepository.save(result);
         return result.toDomain();

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class TokenGeneratorServiceTest {
 
     @InjectMocks
-    TokenGeneratorService service;
+    private TokenGeneratorService service;
 
     @Mock
     private EncryptProperty encryptProperty;

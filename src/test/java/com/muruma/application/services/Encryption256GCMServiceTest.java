@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class Encryption256GCMServiceTest {
 
     @InjectMocks
-    Encryption256GCMService service;
+    private Encryption256GCMService service;
 
     @Mock
     private EncryptProperty encryptProperty;
