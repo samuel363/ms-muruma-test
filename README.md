@@ -106,11 +106,15 @@ sequenceDiagram
     autonumber
     actor user
     participant ms-muruma-test
+    participant PostgresDB
     alt success
         user->>+ms-muruma-test: CreateUser(name, email, password, phones)
         ms-muruma-test-->>ms-muruma-test: Validacioes
-        ms-muruma-test->>ms-muruma-test: Crear Usuario
+        ms-muruma-test->>PostgresDB: Crear Usuario
+        PostgresDB-->>ms-muruma-test: Usuario (UUID)
         ms-muruma-test->>ms-muruma-test: Generar Token
+        ms-muruma-test->>PostgresDB: Actualizar Usuario (Token)
+        PostgresDB-->>ms-muruma-test: Usuario
         ms-muruma-test-->>-user: 201 - Created Success [user-details, token]
     else error de validaciones
         user->>+ms-muruma-test: CreateUser(name, email, password, phones)
