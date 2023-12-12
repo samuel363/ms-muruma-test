@@ -11,9 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -41,19 +43,21 @@ public class UserAdapter implements UserJPARepository {
 
     @Override
     public User getUser(UUID id) {
-        Optional<UserEntity> result = userRepository.findById(id);
+        UserEntity result = getUserEntity(userRepository.findById(id));
+        return result.toDomain();
+    }
+
+    private UserEntity getUserEntity(Optional<UserEntity> userRepository) {
+        Optional<UserEntity> result = userRepository;
         if (result.isEmpty())
             throw new UserNotFoundException(ErrorCode.CLIENT_NOT_FOUND);
-        return result.get().toDomain();
+        return result.get();
     }
 
     @Override
     public User updateUser(UUID id, User user) {
-        Optional<UserEntity> result = userRepository.findById(id);
-        if (result.isEmpty())
-            throw new UserNotFoundException(ErrorCode.CLIENT_NOT_FOUND);
+        UserEntity userEntity = getUserEntity(userRepository.findById(id));
 
-        UserEntity userEntity = result.get();
         if (!Objects.isNull(user.getEmail())) userEntity.setEmail(user.getEmail());
         if (!Objects.isNull(user.getPassword())) userEntity.setPassword(user.getPassword());
         if (!Objects.isNull(user.getName())) userEntity.setName(user.getName());
@@ -65,10 +69,7 @@ public class UserAdapter implements UserJPARepository {
 
     @Override
     public User updateLoginUser(User user) {
-        Optional<UserEntity> optional = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
-        if (optional.isEmpty())
-            throw new UserNotFoundException(ErrorCode.CLIENT_NOT_FOUND);
-        UserEntity result = optional.get();
+        UserEntity result = getUserEntity(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()));
         result.setLastLogin(LocalDateTime.now());
         result = userRepository.save(result);
         return result.toDomain();
@@ -76,10 +77,7 @@ public class UserAdapter implements UserJPARepository {
 
     @Override
     public User updateUserToken(User user, String token) {
-        Optional<UserEntity> optional = userRepository.findById(user.getId());
-        if (optional.isEmpty())
-            throw new UserNotFoundException(ErrorCode.CLIENT_NOT_FOUND);
-        UserEntity result = optional.get();
+        UserEntity result = getUserEntity(userRepository.findById(user.getId()));
         result.setToken(token);
         result = userRepository.save(result);
         return result.toDomain();
@@ -88,6 +86,20 @@ public class UserAdapter implements UserJPARepository {
     @Override
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateUserActive(UUID id, Boolean status) {
+        UserEntity result = getUserEntity(userRepository.findById(id));
+        result.setIsActive(status);
+        userRepository.save(result);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll().stream()
+                .map(UserEntity::toDomain)
+                .collect(Collectors.toList());
     }
 
 }

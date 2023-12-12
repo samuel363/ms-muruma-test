@@ -66,7 +66,7 @@ public class UserCommandUseCase implements UserCommand {
 
     @Override
     public User updateUser(UUID id, User user, String token) {
-        if (!validateToken(token.replace("Bearer ", ""), id.toString()))
+        if (!tokenGeneratorService.validateToken(token.replace("Bearer ", ""), id.toString()))
             throw new UserLoginException(ErrorCode.UNAUTHORIZED_USER);
         if (!Objects.isNull(user.getPassword())) {
             user = user.withPassword(
@@ -74,6 +74,20 @@ public class UserCommandUseCase implements UserCommand {
             );
         }
         return userJPARepository.updateUser(id, user);
+    }
+
+    @Override
+    public void logicDeleteUser(UUID id, String token) {
+        if (!tokenGeneratorService.validateToken(token.replace("Bearer ", ""), id.toString()))
+            throw new UserLoginException(ErrorCode.UNAUTHORIZED_USER);
+        userJPARepository.updateUserActive(id, false);
+    }
+
+    @Override
+    public void logicRestoreUser(UUID id, String token) {
+        if (!tokenGeneratorService.validateToken(token.replace("Bearer ", ""), id.toString()))
+            throw new UserLoginException(ErrorCode.UNAUTHORIZED_USER);
+        userJPARepository.updateUserActive(id, true);
     }
 
     @Override
@@ -96,11 +110,6 @@ public class UserCommandUseCase implements UserCommand {
         claims.put("last_login", user.getLastLogin().toString());
         claims.put("isactive", user.getIsActive().toString());
         return tokenGeneratorService.generateToken(claims, user.getId().toString());
-    }
-
-    private Boolean validateToken(String token, String id) {
-        final String subject = tokenGeneratorService.getSubjectFromToken(token);
-        return (subject.equals(id) && !tokenGeneratorService.isTokenExpired(token));
     }
 
 }

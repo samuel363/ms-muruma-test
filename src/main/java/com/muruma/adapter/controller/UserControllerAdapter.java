@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -28,8 +30,8 @@ import java.util.UUID;
 @RequestMapping("/api/v1/user")
 public final class UserControllerAdapter {
     private static final String LOGIN = "/login";
-    private static final String CREATE_USER = "/create";
     private static final String USER = "/{id}";
+    private static final String USERS = "/all";
     private final UserCommand userCommand;
     private final UserQuery userQuery;
 
@@ -38,7 +40,7 @@ public final class UserControllerAdapter {
         this.userQuery = userQuery;
     }
 
-    @PostMapping(CREATE_USER)
+    @PostMapping()
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserResponseModel createInternalUser(
             @Valid @RequestBody UserRequestModel request
@@ -69,6 +71,15 @@ public final class UserControllerAdapter {
         var response = userQuery.getUser(id);
         log.info("Respuesta del servicio: [{}]", response);
         return UserResponseModel.of(response);
+    }
+
+    @GetMapping(USERS)
+    public List<UserResponseModel> getAllUsers(
+    ) {
+        log.info("Llamada al servicio");
+        var response = userQuery.getUsers();
+        log.info("Respuesta del servicio: [{}]", response);
+        return response.stream().map(UserResponseModel::of).collect(Collectors.toList());
     }
 
     @PutMapping(USER)

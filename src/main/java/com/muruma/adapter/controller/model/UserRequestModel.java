@@ -10,7 +10,12 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,24 +40,30 @@ public class UserRequestModel {
     @Data
     @Builder
     public static class PhoneRequestModel {
-        @NotBlank(message = ERROR_BLANK)
+        @NotNull
+        @Min(0)
+        @Max(99999999)
         private Integer number;
         @JsonProperty(value = "citycode")
         private String cityCode;
         @JsonProperty(value = "contrycode")
         private String countryCode;
+
+        public Phone toDomain() {
+            return Phone.builder()
+                            .number(number)
+                            .cityCode(cityCode)
+                            .countryCode(countryCode)
+                            .build();
+        }
     }
 
     public User toDomain() {
         List<Phone> phones = null;
         if (!Objects.isNull(this.phones)) {
-            phones = this.phones.stream().map(phoneModel ->
-                    Phone.builder()
-                            .number(phoneModel.getNumber())
-                            .cityCode(phoneModel.getCityCode())
-                            .countryCode(phoneModel.getCountryCode())
-                            .build()
-            ).collect(Collectors.toList());
+            phones = this.phones.stream()
+                            .map(PhoneRequestModel::toDomain)
+                            .collect(Collectors.toList());
         }
 
         return User.builder()

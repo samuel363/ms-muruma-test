@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -20,5 +21,10 @@ public class UserQueryUseCase implements UserQuery {
     @Override
     public User getUser(UUID id) {
         return userJPARepository.getUser(id);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userJPARepository.getUsers();
     }
 }

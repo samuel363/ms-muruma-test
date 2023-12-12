@@ -66,4 +66,9 @@ public class TokenGeneratorService {
                 .compact();
     }
 
+    public Boolean validateToken(String token, String id) {
+        final String subject = getSubjectFromToken(token);
+        return (subject.equals(id) && !isTokenExpired(token));
+    }
+
 }

@@ -15,7 +15,9 @@ public enum ErrorCode {
     ENCRYPT_PROCESS_FAILED(106, "Error de encriptando"),
     DECRYPT_PROCESS_FAILED(107, "Error de desencriptando"),
     INVALID_ID(108, "Parametro ID es invalido, requiere UUID"),
-    UNAUTHORIZED_USER(109, "Usuario no autorizado");
+    UNAUTHORIZED_USER(109, "Usuario no autorizado"),
+    PHONE_ALREADY_EXISTS(110, "El telefono ya fue registrado"),
+    PHONE_NOT_FOUND(111, "Telefono no encontrado");
 
     private final int value;
     private final String reason;

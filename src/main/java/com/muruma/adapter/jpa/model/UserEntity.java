@@ -44,12 +44,8 @@ public class UserEntity {
         List<PhoneEntity> phones = new ArrayList<>();
 
         user.getPhones().forEach(phone -> {
-            PhoneEntity phoneEntity = new PhoneEntity();
-            phoneEntity.setNumber(phone.getNumber());
-            phoneEntity.setCityCode(phone.getCityCode());
-            phoneEntity.setCountryCode(phone.getCountryCode());
             phones.add(
-                    phoneEntity
+                PhoneEntity.of(phone)
             );
         });
 
